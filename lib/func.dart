@@ -197,7 +197,7 @@ mixin Func{
     // User Logic Interface
   }
 
-  createUserUsingBasic(String name, String username, String password, BuildContext context) async{
+  createUserUsingBearer(String name, String username, String password, BuildContext context) async{
     await sendRequest(endpoint: basicAuth, method: Method.POST, params: {
       "name": name,
       "username": username,
@@ -215,14 +215,15 @@ mixin Func{
     });
   }
 
-  getUserUsingBasic(String username, String password, BuildContext context) async{
+  getUserUsingBearer(String username, String password, BuildContext context) async{
     await sendRequest(
         endpoint: basicAuth,
         method: Method.GET,
         params: {
       "username": username,
-      "password": password},
-        authorizationHeader: "Basic ${base64.encode("$username:$password".codeUnits)}")
+      "password": password,
+        },
+    )
         .then((value){
           if(context.mounted){
             if(value.statusCode == 200){
@@ -236,14 +237,42 @@ mixin Func{
     });
   }
 
-  updateUserUsingBasic(String id, String name, String username, String newPassword, String oldPassword, BuildContext context) async{
+  updateUserUsingBearer(
+      String id,
+      String name,
+      String username,
+      String newPassword,
+      String oldPassword,
+      String sessionToken,
+      BuildContext context,
+      ) async{
     await sendRequest(endpoint: basicAuth + id, method: Method.PATCH, params: {
       "name": name,
       "username": username,
-      "password": newPassword},
-        authorizationHeader: "Basic ${base64.encode("$username:$oldPassword".codeUnits)}"
+      "password": newPassword,
+    },
+        authorizationHeader: "Bearer $sessionToken"
     ).then((value){}).catchError((err){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Unable to sign up!")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to process")));
     });
+  }
+
+  deleteUserUsingBearer(String id, String sessionToken) async{
+    await sendRequest(
+        endpoint: basicAuth + id,
+        method: Method.DELETE,
+        authorizationHeader: "Bearer $sessionToken"
+    );
+  }
+
+  Future<Map<String, dynamic>> getRecipe(BuildContext context) async{
+    Map<String, dynamic> recipe = {};
+    
+    await sendRequest(endpoint: restapi, method: Method.GET).then((value){
+      recipe = jsonDecode(value.data) as Map<String, dynamic>;
+    }).catchError((err){
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch recipe")));
+    });
+    return recipe;
   }
 }
