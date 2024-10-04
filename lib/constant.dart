@@ -1,11 +1,11 @@
-const baseUrl = "http:localhost:8080";
+const baseUrl = "http://localhost:8080";
 
 const allLists = "/";
-const newLists = "/lists";
-const singleList = "$newLists/";
+const newList = "/lists";
+const singleList = "$newList/";
 const items = "/items";
 const itemsByList = "$items/";
-const singleItems = "$items/";
+const singleItem = "$items/";
 const db = "/db";
 const firebase = "$db/fbase";
 const mongodb = "$db/mongodb";

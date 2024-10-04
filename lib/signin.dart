@@ -75,8 +75,8 @@ class _SignInState extends State<SignIn> with Func {
                     child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // getUserUsingBasic(usernameController.text,
-                            //     passwordController.text, context, rememberMe);
+                            getUserUsingBasic(usernameController.text,
+                                passwordController.text, context, rememberMe);
                           }
                         },
                         style:

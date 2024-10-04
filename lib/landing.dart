@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'func.dart';
 
 class Landing extends StatefulWidget {
@@ -32,7 +31,8 @@ class _LandingState extends State<Landing> with Func {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    // await getLoginStatus(context);
+                    await getLoginStatus(context);
+                    Navigator.pushNamed(context, "/signin");
                   },
                   style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),

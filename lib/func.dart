@@ -1,239 +1,334 @@
 import 'dart:convert';
-
-import 'package:dart_frog_flutter/constant.dart';
-import 'package:dart_frog_flutter/httpService.dart';
+import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'constant.dart';
+import 'httpService.dart';
 
-mixin Func{
+mixin Func {
   HttpService httpService = HttpService();
 
-  Future<Response<dynamic>>sendRequest({
-    required String endpoint,
-    required Method method,
-    Map<String, dynamic>? params,
-    String? authorizationHeader,
-  }) async{
+  Future<Response<dynamic>> sendRequest(
+      {required String endpoint,
+        required Method method,
+        Map<String, dynamic>? params,
+        String? authorizationHeader}) async {
     httpService.init(BaseOptions(
-      baseUrl: baseUrl,
-      contentType: "application/json",
-      headers: {"Authorization" : authorizationHeader}
-    ));
+        baseUrl: baseUrl,
+        contentType: "application/json",
+        headers: {"Authorization": authorizationHeader}));
 
-    final response = await httpService.request(endpoint: endpoint, method: method, params: params);
+    final response = await httpService.request(
+        endpoint: endpoint, method: method, params: params);
     return response;
   }
 
-  Future<Map<String, dynamic>> getLists(BuildContext context) async{
+  // sendFile({required String endpoint, required FormData formData}) async {
+  //   httpService.init(
+  //       BaseOptions(baseUrl: baseUrl, contentType: "multipart/form-data"));
+  //   final response =
+  //   await httpService.requestFile(endpoint: endpoint, formData: formData);
+  //   return response;
+  // }
+
+  Future<Map<String, dynamic>> getLists(BuildContext context) async {
     Map<String, dynamic> lists = {};
 
-    await sendRequest(endpoint: allLists, method: Method.GET).then((lsts){
+    await sendRequest(endpoint: allLists, method: Method.GET).then((lsts) {
       lists = lsts.data as Map<String, dynamic>;
-    }).catchError((onError){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch list")));
+    }).catchError((onError) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to fetch lists")));
     });
 
     return lists;
   }
 
-  createList(String name) async{
-    await sendRequest(endpoint: newLists, method: Method.POST, params: {"name" : name});
+  createList(String name) async {
+    await sendRequest(
+        endpoint: newList, method: Method.POST, params: {"name": name});
   }
 
-  getList(String id) async{
-    await sendRequest(endpoint: singleList, method: Method.GET);
+  getList(String id) async {
+    await sendRequest(endpoint: singleList + id, method: Method.GET);
   }
 
-  updateList(String id, String name) async{
+  updateList(String id, String name) async {
     await sendRequest(
         endpoint: singleList + id,
         method: Method.PATCH,
-        params: {"name" : name},
-    );
+        params: {"name": name});
   }
 
-  deleteList(String id) async{
+  deleteList(String id) async {
     await sendRequest(endpoint: singleList + id, method: Method.DELETE);
   }
 
-  Future<Map<String, dynamic>> getItems(BuildContext context)async{
+  Future<Map<String, dynamic>> getItems(BuildContext context) async {
     Map<String, dynamic> allItems = {};
 
-    await sendRequest(endpoint: items, method: Method.GET).then((itms){
+    await sendRequest(endpoint: items, method: Method.GET).then((itms) {
       allItems = itms.data as Map<String, dynamic>;
-    }).catchError((err){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch items")));
+    }).catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to fetch items")));
     });
 
     return allItems;
   }
 
-  createItem(String listid, String name, String description, bool status)async{
+  createItem(
+      String listid, String name, String description, bool status) async {
     await sendRequest(endpoint: items, method: Method.POST, params: {
       "listid": listid,
       "name": name,
       "description": description,
-      "status": status,
+      "status": status
     });
   }
 
-  getItemsByList(String listid, BuildContext context)async{
+  Future<Map<String, dynamic>> getItemsByList(
+      String listid, BuildContext context) async {
     Map<String, dynamic> items = {};
 
-    await sendRequest(endpoint: itemsByList + listid, method: Method.GET).then((itms){
+    await sendRequest(endpoint: itemsByList + listid, method: Method.GET)
+        .then((itms) {
       items = itms.data as Map<String, dynamic>;
-    }).catchError((err){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch items")));
+    }).catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to fetch items")));
     });
-
     return items;
   }
 
-  updateItem(String id, String listid, String name, String description, bool status) async{
-    await sendRequest(endpoint: singleItems + id, method: Method.PATCH, params: {
+  updateItem(String id, String listid, String name, String description,
+      bool status) async {
+    await sendRequest(endpoint: singleItem + id, method: Method.PATCH, params: {
       "name": name,
       "listid": listid,
       "description": description,
-      "status": status,
+      "status": status
     });
   }
 
-  deleteItem(String id) async{
-    await sendRequest(endpoint: singleItems + id, method: Method.DELETE);
+  deleteItem(String id) async {
+    await sendRequest(endpoint: singleItem + id, method: Method.DELETE);
   }
 
-  getListsUsingFirebase(BuildContext context)async{
+  getListsUsingFirebase(BuildContext context) async {
     Map<String, dynamic> lists = {};
 
-    await sendRequest(endpoint: firebase, method: Method.GET).then((lsts){
+    await sendRequest(endpoint: firebase, method: Method.GET).then((lsts) {
       lists = lsts.data as Map<String, dynamic>;
-    }).catchError((onError){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch list")));
+    }).catchError((onError) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to fetch lists")));
     });
 
     return lists;
   }
 
-  createListUsingFirebase(String name) async{
-    await sendRequest(endpoint: firebase, method: Method.POST, params: {"name" : name});
+  createListUsingFirebase(String name) async {
+    await sendRequest(
+        endpoint: firebase, method: Method.POST, params: {"name": name});
   }
 
-  updateListUsingFirebase(String id, String name) async{
+  updateListUsingFirebase(String id, String name) async {
     await sendRequest(
-      endpoint: firebase + id,
-      method: Method.PATCH,
-      params: {"name" : name},
-    );
+        endpoint: firebase + id, method: Method.PATCH, params: {"name": name});
   }
 
   deleteListUsingFirebase(String id) async {
     await sendRequest(endpoint: firebase + id, method: Method.DELETE);
   }
 
-  getListsUsingMongodb(BuildContext context)async{
+  getListsUsingMongodb(BuildContext context) async {
     Map<String, dynamic> lists = {};
 
-    await sendRequest(endpoint: mongodb, method: Method.GET).then((lsts){
+    await sendRequest(endpoint: mongodb, method: Method.GET).then((lsts) {
       lists = lsts.data as Map<String, dynamic>;
-    }).catchError((onError){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch list")));
+    }).catchError((onError) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to fetch lists")));
     });
 
     return lists;
   }
 
-  createListUsingMongodb(String name) async{
-    await sendRequest(endpoint: mongodb, method: Method.POST, params: {"name" : name});
+  createListUsingMongodb(String name) async {
+    await sendRequest(
+        endpoint: mongodb, method: Method.POST, params: {"name": name});
   }
 
-  updateListUsingMongodb(String id, String name) async{
+  updateListUsingMongodb(String id, String name) async {
     await sendRequest(
-      endpoint: mongodb + id,
-      method: Method.PATCH,
-      params: {"name" : name},
-    );
+        endpoint: mongodb + id, method: Method.PATCH, params: {"name": name});
   }
 
   deleteListUsingMongodb(String id) async {
     await sendRequest(endpoint: mongodb + id, method: Method.DELETE);
   }
 
-  getListsUsingPostgresql(BuildContext context)async{
+  getListsUsingPostgresql(BuildContext context) async {
     Map<String, dynamic> lists = {};
 
-    await sendRequest(endpoint: postgresql, method: Method.GET).then((lsts){
+    await sendRequest(endpoint: postgresql, method: Method.GET).then((lsts) {
       lists = lsts.data as Map<String, dynamic>;
-    }).catchError((onError){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch list")));
+    }).catchError((onError) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to fetch lists")));
     });
 
     return lists;
   }
 
-  createListUsingPostgresql(String name) async{
-    await sendRequest(endpoint: postgresql, method: Method.POST, params: {"name" : name});
+  createListUsingPostgresql(String name) async {
+    await sendRequest(
+        endpoint: postgresql, method: Method.POST, params: {"name": name});
   }
 
-  updateListUsingPostgresql(String id, String name) async{
+  updateListUsingPostgresql(String id, String name) async {
     await sendRequest(
-      endpoint: postgresql + id,
-      method: Method.PATCH,
-      params: {"name" : name},
-    );
+        endpoint: postgresql + id,
+        method: Method.PATCH,
+        params: {"name": name});
   }
 
   deleteListUsingPostgresql(String id) async {
     await sendRequest(endpoint: postgresql + id, method: Method.DELETE);
   }
 
-  setLoginStatus(int status) async{
-    await sendRequest(endpoint: redis, method: Method.POST, params: {"loggedin": status});
+  setLoginStatus(int status) async {
+    await sendRequest(
+        endpoint: redis, method: Method.POST, params: {"loggedin": status});
   }
 
-  getLoginStatus() async{
-    final response = await sendRequest(endpoint: redis, method: Method.GET).then((value) => value);
-
-    // User Logic Interface
+  getLoginStatus(BuildContext context) async {
+    final response = await sendRequest(endpoint: redis, method: Method.GET)
+        .then((value) => value);
+    if (context.mounted) {
+      if (response.data['success']) {
+        if (response.data['message'] == 0) {
+          Navigator.pushNamed(context, '/signin');
+        } else {
+          Navigator.pushNamed(context, '/lists');
+        }
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(response.data['message'])));
+      }
+    }
   }
 
-  createUserUsingBearer(String name, String username, String password, BuildContext context) async{
-    await sendRequest(endpoint: basicAuth, method: Method.POST, params: {
-      "name": name,
-      "username": username,
-      "password": password,
-    }).then((value) {
-      if(context.mounted){
-        if(value.statusCode == 200){
-          //Navigate to sign in
-        }else{
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Unable to sign up!")));
+  createUserUsingBasic(String name, String username, String password,
+      BuildContext context) async {
+    await sendRequest(
+        endpoint: basicAuth,
+        method: Method.POST,
+        params: {"name": name, "username": username, "password": password})
+        .then((value) {
+      if (context.mounted) {
+        if (value.statusCode == 200) {
+          Navigator.pushNamed(context, "/signin");
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Unable to sign up!")));
         }
       }
-    }).catchError((err){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Unable to sign up!")));
+    }).catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Unable to sign up!")));
     });
   }
 
-  getUserUsingBearer(String username, String password, BuildContext context) async{
+  getUserUsingBasic(String username, String password, BuildContext context,
+      bool rememberMe) async {
     await sendRequest(
         endpoint: basicAuth,
         method: Method.GET,
+        params: {"username": username, "password": password},
+        authorizationHeader:
+        "Basic ${base64.encode("$username:$password".codeUnits)}")
+        .then((value) {
+      if (context.mounted) {
+        if (value.statusCode == 200) {
+          /// User interface logic
+          // customProvider.setUser(value.data as Map<String, dynamic>);
+          Navigator.pushNamed(context, "/lists");
+          // setLoginStatus(rememberMe ? 1 : 0);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Unable to sign in!")));
+        }
+      }
+    }).catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Unable to sign in!")));
+    });
+  }
+
+  updateUserUsingBasic(String id, String name, String username,
+      String newpassword, String oldpassword, BuildContext context) async {
+    await sendRequest(
+        endpoint: basicAuth + id,
+        method: Method.PATCH,
         params: {
-      "username": username,
-      "password": password,
+          "name": name,
+          "username": username,
+          "password": newpassword
         },
-    )
-        .then((value){
-          if(context.mounted){
-            if(value.statusCode == 200){
-              // User interface
-            }else{
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Unable to sign up!")));
-            }
-          }
-    }).catchError((err){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Unable to sign up!")));
+        authorizationHeader:
+        "Basic ${base64.encode("$username:$oldpassword".codeUnits)}")
+        .then((value) {})
+        .catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to process")));
+    });
+  }
+
+  deleteUserUsingBasic(String id) async {
+    await sendRequest(endpoint: basicAuth + id, method: Method.DELETE);
+  }
+
+  createUserUsingBearer(String name, String username, String password,
+      BuildContext context) async {
+    await sendRequest(
+        endpoint: bearerAuth,
+        method: Method.POST,
+        params: {"name": name, "username": username, "password": password})
+        .then((value) {
+      if (context.mounted) {
+        if (value.statusCode == 200) {
+          //Navigate to sign in
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Unable to sign up!")));
+        }
+      }
+    }).catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Unable to sign up!")));
+    });
+  }
+
+  getUserUsingBearer(
+      String username, String password, BuildContext context) async {
+    await sendRequest(
+      endpoint: bearerAuth,
+      method: Method.GET,
+      params: {"username": username, "password": password},
+    ).then((value) {
+      if (context.mounted) {
+        if (value.statusCode == 200) {
+          //User Interface logic
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Unable to sign in!")));
+        }
+      }
+    }).catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Unable to sign in!")));
     });
   }
 
@@ -241,38 +336,56 @@ mixin Func{
       String id,
       String name,
       String username,
-      String newPassword,
-      String oldPassword,
-      String sessionToken,
+      String newpassword,
+      String oldpassword,
       BuildContext context,
-      ) async{
-    await sendRequest(endpoint: basicAuth + id, method: Method.PATCH, params: {
-      "name": name,
-      "username": username,
-      "password": newPassword,
-    },
-        authorizationHeader: "Bearer $sessionToken"
-    ).then((value){}).catchError((err){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to process")));
+      String sessionToken) async {
+    await sendRequest(
+        endpoint: bearerAuth + id,
+        method: Method.PATCH,
+        params: {
+          "name": name,
+          "username": username,
+          "password": newpassword
+        },
+        authorizationHeader: "Bearer $sessionToken")
+        .then((value) {})
+        .catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to process")));
     });
   }
 
-  deleteUserUsingBearer(String id, String sessionToken) async{
+  deleteUserUsingBearer(String id, String sessionToken) async {
     await sendRequest(
-        endpoint: basicAuth + id,
+        endpoint: bearerAuth + id,
         method: Method.DELETE,
-        authorizationHeader: "Bearer $sessionToken"
-    );
+        authorizationHeader: "Bearer $sessionToken");
   }
 
-  Future<Map<String, dynamic>> getRecipe(BuildContext context) async{
+  Future<Map<String, dynamic>> getRecipe(BuildContext context) async {
     Map<String, dynamic> recipe = {};
-    
-    await sendRequest(endpoint: restapi, method: Method.GET).then((value){
+
+    await sendRequest(endpoint: restapi, method: Method.GET).then((value) {
       recipe = jsonDecode(value.data) as Map<String, dynamic>;
-    }).catchError((err){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch recipe")));
+    }).catchError((err) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to fetch recipe")));
     });
     return recipe;
   }
+
+  /// File Upload
+  // fileUpload(File file) async {
+  //   FormData formData = FormData.fromMap({
+  //     'file': await MultipartFile.fromFile(file.path,
+  //         filename: file.path.split('/').last)
+  //   });
+  //
+  //   await sendFile(endpoint: files, formData: formData);
+  // }
+  //
+  // fileDownload() {
+  //   return sendRequest(endpoint: files, method: Method.GET);
+  // }
 }
