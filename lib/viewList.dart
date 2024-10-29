@@ -1,4 +1,3 @@
-import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'add_item.dart';
 import 'func.dart';
@@ -65,7 +64,8 @@ class _ViewListState extends State<ViewList> with Func {
                             child: Icon(Icons.delete, size: 30),
                           ),
                           content: const Text(
-                              "Do you want to delete this list?"),
+                              "Do you want to delete this list?",
+                          ),
                           actions: [
                             ElevatedButton(
                                 onPressed: () {
@@ -126,18 +126,10 @@ class _ViewListState extends State<ViewList> with Func {
                   return Center(
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
-                      child: EmptyWidget(
-                        image: null,
-                        packageImage: PackageImage.Image_4,
-                        title: 'No Items',
-                        subTitle: 'No Items available yet',
-                        titleTextStyle: const TextStyle(
-                            fontSize: 22,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w500),
-                        subtitleTextStyle:
-                        const TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
+                      child: Text("No Item", style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w500)),
                     ),
                   );
                 } else {
@@ -250,18 +242,10 @@ class _ViewListState extends State<ViewList> with Func {
                 return Center(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.7,
-                    child: EmptyWidget(
-                      image: null,
-                      packageImage: PackageImage.Image_4,
-                      title: 'No Items',
-                      subTitle: 'No Items available yet',
-                      titleTextStyle: const TextStyle(
-                          fontSize: 22,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w500),
-                      subtitleTextStyle:
-                      const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
+                    child: Text("No Items", style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w500)),
                   ),
                 );
               }

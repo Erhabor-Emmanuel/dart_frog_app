@@ -1,5 +1,4 @@
 import 'package:dart_frog_flutter/viewList.dart';
-import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'func.dart';
 
@@ -51,18 +50,22 @@ class _ListsState extends State<Lists> with Func {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        EmptyWidget(
-                          image: null,
-                          packageImage: PackageImage.Image_4,
-                          title: 'No Lists',
-                          subTitle: 'No Lists available yet',
-                          titleTextStyle: const TextStyle(
-                              fontSize: 22,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w500),
-                          subtitleTextStyle:
-                          const TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
+                        Text("No Lists", style: TextStyle(
+                            fontSize: 22,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w500)),
+                        // EmptyWidget(
+                        //   image: null,
+                        //   packageImage: PackageImage.Image_4,
+                        //   title: 'No Lists',
+                        //   subTitle: 'No Lists available yet',
+                        //   titleTextStyle: const TextStyle(
+                        //       fontSize: 22,
+                        //       color: Colors.blue,
+                        //       fontWeight: FontWeight.w500),
+                        //   subtitleTextStyle:
+                        //   const TextStyle(fontSize: 14, color: Colors.grey),
+                        // ),
                         newList(context)
                       ],
                     ),
@@ -98,18 +101,10 @@ class _ListsState extends State<Lists> with Func {
               return Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
-                  child: EmptyWidget(
-                    image: null,
-                    packageImage: PackageImage.Image_4,
-                    title: 'No Lists',
-                    subTitle: 'No Lists available yet',
-                    titleTextStyle: const TextStyle(
-                        fontSize: 22,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w500),
-                    subtitleTextStyle:
-                    const TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
+                  child: Text("No Lists", style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.w500)),
                 ),
               );
             }

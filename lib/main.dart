@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      initialRoute: "/",
+      // initialRoute: "/",
       routes: {
         "/": (context) => const Landing(),
         "/signin": (context) => const SignIn(),
@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
         // "/settings": (context) => const Settings(),
         // "/changepass": (context) => const ChangePassword()
       },
+
       debugShowCheckedModeBanner: false,
     );
   }
