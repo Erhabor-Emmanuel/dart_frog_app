@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dart_frog_flutter/main.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'constant.dart';
@@ -253,9 +254,9 @@ mixin Func {
       if (context.mounted) {
         if (value.statusCode == 200) {
           /// User interface logic
-          // customProvider.setUser(value.data as Map<String, dynamic>);
+          customProvider.setUser(value.data as Map<String, dynamic>);
           Navigator.pushNamed(context, "/lists");
-          // setLoginStatus(rememberMe ? 1 : 0);
+          setLoginStatus(rememberMe ? 1 : 0);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Unable to sign in!")));

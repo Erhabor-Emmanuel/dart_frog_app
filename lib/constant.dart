@@ -1,5 +1,5 @@
 const baseUrl = "http://localhost:8080";
-
+const ws = "ws://localhost:8080/ws";
 const allLists = "/";
 const newList = "/lists";
 const singleList = "$newList/";

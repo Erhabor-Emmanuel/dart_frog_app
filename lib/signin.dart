@@ -74,6 +74,9 @@ class _SignInState extends State<SignIn> with Func {
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
                         onPressed: () {
+                          debugPrint("username: ${usernameController.text}");
+                          debugPrint("password: ${passwordController.text}");
+                          debugPrint("rememberMe: $rememberMe");
                           if (_formKey.currentState!.validate()) {
                             getUserUsingBasic(usernameController.text,
                                 passwordController.text, context, rememberMe);

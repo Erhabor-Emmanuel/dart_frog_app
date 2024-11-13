@@ -1,13 +1,25 @@
+import 'package:dart_frog_flutter/receipe.dart';
+import 'package:dart_frog_flutter/settings.dart';
 import 'package:dart_frog_flutter/signin.dart';
 import 'package:dart_frog_flutter/signup.dart';
 import 'package:dart_frog_flutter/viewList.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'add_item.dart';
+import 'change_password.dart';
+import 'chat_room.dart';
+import 'custom_provider.dart';
+import 'file.dart';
 import 'landing.dart';
 import 'lists.dart';
 
+CustomProvider customProvider = CustomProvider();
+
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => CustomProvider())],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,11 +42,11 @@ class MyApp extends StatelessWidget {
         "/lists": (context) => const Lists(),
         ViewList.routeName: (context) => const ViewList(),
         AddItem.routeName: (context) => const AddItem(),
-        // "/recipe": (context) => const Recipe(),
-        // "/file": (context) => const FileUpload(),
-        // "/chat": (context) => const ChatRoom(),
-        // "/settings": (context) => const Settings(),
-        // "/changepass": (context) => const ChangePassword()
+        "/recipe": (context) => const Recipe(),
+        "/file": (context) => const FileUpload(),
+        "/chat": (context) => const ChatRoom(),
+        "/settings": (context) => const Settings(),
+        "/changepass": (context) => const ChangePassword()
       },
 
       debugShowCheckedModeBanner: false,
